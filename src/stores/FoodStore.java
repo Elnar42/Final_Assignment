@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class FoodStore {
+public class FoodStore implements Cloneable{
 
     private final Map<Food, Integer> foodInventory;
 
@@ -59,5 +59,14 @@ public class FoodStore {
 
     public Map<Food, Integer> getFoodInventory() {
         return foodInventory;
+    }
+
+    @Override
+    public FoodStore clone() {
+        try {
+            return (FoodStore) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

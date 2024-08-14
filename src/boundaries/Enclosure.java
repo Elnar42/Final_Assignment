@@ -10,14 +10,19 @@ public class Enclosure {
 
     private List<Animal> animals;
     private FoodStore foodStore;
+    private final FoodStore refreshFoodStore;
     private int waste;
 
     public Enclosure(FoodStore foodStore) {
         this.animals = new ArrayList<>(20);
         this.foodStore = foodStore;
+        this.refreshFoodStore = foodStore.clone();
         this.waste = 0;
     }
 
+    public void restoreFoodStore(){
+        foodStore = refreshFoodStore.clone();
+    }
 
     public void addAnimal(Animal animal) {
         if (animals.contains(animal)) {

@@ -1,10 +1,6 @@
 package animals;
 
-import boundaries.Enclosure;
-import enums.Food;
 import enums.Gender;
-
-import java.util.Set;
 
 public class Tiger extends BigCat {
     public Tiger(int age, Gender gender) {
@@ -12,8 +8,19 @@ public class Tiger extends BigCat {
         setLifeExpectancy(24);
     }
 
+    public Tiger(int age, Gender gender, int health, int lifeExpectancy) {
+        super("Tiger", age, gender);
+        setLifeExpectancy(lifeExpectancy);
+        setHealth(health);
+    }
+
     @Override
     public void treat() {
+        stroke();
+    }
 
+    @Override
+    public void stroke() {
+        setHealth(getHealth() + 3);
     }
 }

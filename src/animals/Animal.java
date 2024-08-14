@@ -27,6 +27,7 @@ public abstract class Animal {
         lifeExpectancy = 10;
     }
 
+
     public boolean canEat(Food food) {
         return eats.contains(food) && enclosure.getFoodStore().takeFood(food.name());
     }
@@ -35,12 +36,12 @@ public abstract class Animal {
         if (canEat(food)) {
             setHealth(Math.min(getHealth() + food.getHealth(), 10));
             enclosure.setWaste(enclosure.getWasteSize() + food.getWaste());
-        }else{
+        } else {
             throw new IllegalArgumentException("Can't eat food " + food);
         }
     }
 
-    public void decreaseHealth(){
+    public void decreaseHealth() {
         setHealth(getHealth() - 2);
     }
 
@@ -48,18 +49,18 @@ public abstract class Animal {
 
 
     //More reasonable to implement it in Animal class
-    public boolean aMonthPasses(){
-       decreaseHealth();
-       Food foodToEat = null;
-       for(Food food : eats){
-           if(enclosure.getFoodStore().getFoodInventory().get(food) > 0){
-               foodToEat = food;
-               break;
-           }
-       }
-       if(foodToEat != null){
-           eat(foodToEat); // The method will automatically add waste
-       }
+    public boolean aMonthPasses() {
+        decreaseHealth();
+        Food foodToEat = null;
+        for (Food food : eats) {
+            if (enclosure.getFoodStore().getFoodInventory().get(food) > 0) {
+                foodToEat = food;
+                break;
+            }
+        }
+        if (foodToEat != null) {
+            eat(foodToEat); // The method will automatically add waste
+        }
         return true;
     }
 
