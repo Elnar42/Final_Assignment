@@ -1,5 +1,6 @@
 package animals;
 
+import boundaries.Enclosure;
 import enums.Food;
 import enums.Gender;
 
@@ -8,28 +9,34 @@ import java.util.HashSet;
 import java.util.Set;
 
 public abstract class Animal {
+    private String name;
     private int age;
     private Gender gender;
     private Set<Food> eats;
     private int health;
     private int lifeExpectancy;
+    private Enclosure enclosure;
 
-    public Animal(int age, Gender gender) {
+    public Animal(String name, int age, Gender gender) {
+        this.name = name;
         this.age = age;
         this.gender = gender;
+        this.enclosure = null; // Initially animal has not enclosure
         eats = new HashSet<>();
         health = 0;
         lifeExpectancy = 10;
     }
 
     public boolean canEat(Food food) {
-        return eats.contains(food);
+        return eats.contains(food) && enclosure.getFoodStore().takeFood(food.name());
     }
 
     public void eat(Food food) {
         if (canEat(food)) {
             setHealth(Math.min(getHealth() + food.getHealth(), 10));
-            // Will add waste as well after eating
+            enclosure.setWaste(enclosure.getWasteSize() + food.getWaste());
+        }else{
+            throw new IllegalArgumentException("Can't eat food " + food);
         }
     }
 
@@ -38,14 +45,46 @@ public abstract class Animal {
     }
 
     public abstract void treat();
-    public abstract boolean aMonthPasses();
+
+
+    //More reasonable to implement it in Animal class
+    public boolean aMonthPasses(){
+       decreaseHealth();
+       Food foodToEat = null;
+       for(Food food : eats){
+           if(enclosure.getFoodStore().getFoodInventory().get(food) > 0){
+               foodToEat = food;
+               break;
+           }
+       }
+       if(foodToEat != null){
+           eat(foodToEat); // The method will automatically add waste
+       }
+        return true;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Enclosure getEnclosure() {
+        return enclosure;
+    }
+
+    public void setEnclosure(Enclosure enclosure) {
+        this.enclosure = enclosure;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getAge() {
         return age;
     }
 
     public void setAge(int age) {
-        if(age < 0) {
+        if (age < 0) {
             throw new IllegalArgumentException("Age must be a positive integer");
         }
         this.age = age;
@@ -56,7 +95,7 @@ public abstract class Animal {
     }
 
     public void setGender(Gender gender) {
-        if(gender == null) {
+        if (gender == null) {
             throw new IllegalArgumentException("Gender must be a one [" + Arrays.toString(Gender.values()) + "]");
         }
         this.gender = gender;
@@ -67,7 +106,7 @@ public abstract class Animal {
     }
 
     public void setEats(Set<Food> eats) {
-        if(eats == null) {
+        if (eats == null) {
             throw new IllegalArgumentException("Eats cannot be null");
         }
         this.eats = eats;
@@ -78,8 +117,13 @@ public abstract class Animal {
     }
 
     public void setHealth(int health) {
-        if(health < 0 || health > 10) {
-            throw new IllegalArgumentException("Health must be between 0 and 10");
+        if (health < 0) {
+            this.health = 0;
+            return;
+        }
+        if (health > 10) {
+            this.health = 10;
+            return;
         }
         this.health = health;
     }
@@ -91,4 +135,17 @@ public abstract class Animal {
     public void setLifeExpectancy(int lifeExpectancy) {
         this.lifeExpectancy = lifeExpectancy;
     }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "name='" + name + '\'' +
+                ", age=" + age +
+                ", gender=" + gender +
+                ", eats=" + eats +
+                ", health=" + health +
+                ", lifeExpectancy=" + lifeExpectancy +
+                '}';
+    }
 }
+

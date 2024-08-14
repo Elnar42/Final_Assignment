@@ -22,27 +22,28 @@ public class FoodStore {
         if (food.isPresent() && quantity > 0) {
             foodInventory.put(food.get(), foodInventory.get(food.get()) + quantity);
         } else {
-            System.out.println("Invalid food name or quantity.");
+            throw new IllegalArgumentException("Invalid food name or quantity");
         }
     }
 
 
-    public void takeFood(String foodName, int quantity) {
+    public boolean takeFood(String foodName, int quantity) {
         Optional<Food> food = getFoodByName(foodName);
         if (food.isPresent() && quantity > 0) {
             int currentQuantity = foodInventory.get(food.get());
             if (currentQuantity >= quantity) {
                 foodInventory.put(food.get(), currentQuantity - quantity);
             } else {
-                System.out.println("Not enough " + foodName + " in the FoodStore.");
+                throw new IllegalArgumentException("Not enough " + foodName + " in food store to take!");
             }
         } else {
-            System.out.println("Invalid food name or quantity.");
+            throw new IllegalArgumentException("Invalid food name or quantity");
         }
+        return true;
     }
 
-    public void takeFood(String foodName) {
-        takeFood(foodName, 1);
+    public boolean takeFood(String foodName) {
+        return takeFood(foodName, 1);
     }
 
 
