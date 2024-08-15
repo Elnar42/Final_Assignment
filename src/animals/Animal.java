@@ -47,9 +47,13 @@ public abstract class Animal {
 
     public abstract void treat();
 
+    public void increaseAge(){
+        setAge(getAge() + 1);
+    }
+
 
     //More reasonable to implement it in Animal class
-    public boolean aMonthPasses() {
+    public void aMonthPasses() {
         decreaseHealth();
         Food foodToEat = null;
         for (Food food : eats) {
@@ -61,7 +65,6 @@ public abstract class Animal {
         if (foodToEat != null) {
             eat(foodToEat); // The method will automatically add waste
         }
-        return true;
     }
 
     public String getName() {

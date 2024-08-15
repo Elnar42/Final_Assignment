@@ -10,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +38,7 @@ public class Zoo {
                     createEnclosure(line);
                 } else if (line.equals("playZookeeper:") || line.equals("physioZookeeper:") || line.equals("zookeeper:")) {
                     createZookeeper(line);
-                }else if (line.contains(":")) {
+                } else if (line.contains(":")) {
                     if (line.contains(",")) {
                         createAnimal(line);
                     } else {
@@ -88,8 +87,13 @@ public class Zoo {
                 int lifeExpectancy = Integer.parseInt(animalParts[3].trim());
                 Animal animal = createAnimalInstance(animalType, gender, age, health, lifeExpectancy);
                 if (animal != null) {
-                    currentEnclosure.addAnimal(animal);
-                    System.out.println("Added " + animalType + " to enclosure.");
+                    if (currentEnclosure == null || !canAddAnimalToCurrentEnclosure(animal)) {
+                        currentEnclosure = createNewEnclosure();
+                    }
+                    boolean b = currentEnclosure.addAnimal(animal);
+                    if (b) {
+                        System.out.println("Added " + animalType + " to enclosure.");
+                    }
                 }
             }
         }
@@ -113,6 +117,16 @@ public class Zoo {
         };
     }
 
+    private boolean canAddAnimalToCurrentEnclosure(Animal animal) {
+        return currentEnclosure.getAnimals().isEmpty() || currentEnclosure.getAnimals().getFirst().getClass().equals(animal.getClass());
+    }
+
+    private Enclosure createNewEnclosure() {
+        Enclosure newEnclosure = new Enclosure(zooFoodStore);
+        enclosures.add(newEnclosure);
+        System.out.println("Created new enclosure for different animal type.");
+        return newEnclosure;
+    }
 
     private void createZookeeper(String line) {
         Zookeeper zookeeper = null;
@@ -136,6 +150,18 @@ public class Zoo {
 
 
     public void aMonthPasses() {
+        enclosures.forEach(enclosure -> {
+            List<Animal> animals = enclosure.getAnimals();
+            for (int i = 0; i < animals.size(); i++) {
+                Animal animal = animals.get(i);
+                animal.increaseAge();
+                if (animal.getAge() > animal.getLifeExpectancy()) {
+                    System.out.println("Removing " + animal + " due to exceeding life expectancy.");
+                    animals.remove(i--); // Remove the animal and adjust index
+                }
+            }
+        });
+
         enclosures.forEach(Enclosure::aMonthPasses); // 1th requirement
         zookeepers.forEach(Zookeeper::aMonthPasses); // 2nd requirement
         enclosures.forEach(enclosure -> {
@@ -144,20 +170,23 @@ public class Zoo {
         });
 
         enclosures.forEach(Enclosure::restoreFoodStore); // 4th requirement
+
+        enclosures.forEach(e -> {
+            System.out.println("---------------ENCLOSURE ID: " + e.getId() + "-----------------");
+            if(e.getAnimals().isEmpty()) System.out.println("EMPTY!!!");
+            e.getAnimals().forEach(System.out::println);
+        });
     }
 
 
     public void go() {
         int month = 1;
         while (true) {
+            System.out.println("---------------------------------------------------------------------------------------------------------");
             System.out.println("Month " + month);
             aMonthPasses();
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                System.err.println("Simulation interrupted: " + e.getMessage());
-                Thread.currentThread().interrupt(); // Restore interrupted status
+            if(enclosures.stream().allMatch(enclosure -> enclosure.getAnimals().isEmpty())) {
+                System.out.println("NO ANIMAL LEFT IN ZOO!");
                 break;
             }
             month++;

@@ -17,6 +17,7 @@ public class Penguin extends Animal implements Watchable {
         super("Penguin", age, gender);
         setLifeExpectancy(lifeExpectancy);
         setHealth(health);
+        setEats(Set.of(Food.FISH, Food.ICE_CREAM));
     }
 
     @Override

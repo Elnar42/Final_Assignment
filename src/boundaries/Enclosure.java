@@ -5,6 +5,7 @@ import stores.FoodStore;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Enclosure {
 
@@ -12,24 +13,27 @@ public class Enclosure {
     private FoodStore foodStore;
     private final FoodStore refreshFoodStore;
     private int waste;
+    private final String id;
 
     public Enclosure(FoodStore foodStore) {
         this.animals = new ArrayList<>(20);
         this.foodStore = foodStore;
         this.refreshFoodStore = foodStore.clone();
         this.waste = 0;
+        this.id = generateRandomID();
     }
 
     public void restoreFoodStore(){
         foodStore = refreshFoodStore.clone();
     }
 
-    public void addAnimal(Animal animal) {
+    public boolean addAnimal(Animal animal) {
         if (animals.contains(animal)) {
             throw new IllegalArgumentException("Animal already exists");
         } else if (animals.isEmpty() || animals.getFirst().getName().equals(animal.getName())) {
             animals.add(animal);
             animal.setEnclosure(this);
+            return true;
         } else {
             throw new IllegalArgumentException("You can not put different type of animals in the same enclosure!");
         }
@@ -85,5 +89,13 @@ public class Enclosure {
 
     public void aMonthPasses() {
         animals.forEach(Animal::aMonthPasses);
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    private String generateRandomID() {
+        return UUID.randomUUID().toString();
     }
 }

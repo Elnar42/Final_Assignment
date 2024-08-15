@@ -4,9 +4,7 @@ import animals.Animal;
 import boundaries.Enclosure;
 import stores.FoodStore;
 import treats.Bathable;
-import treats.Hugable;
 import treats.Massageable;
-import treats.Strokeable;
 
 public class PhysioZookeeper extends Zookeeper {
 
@@ -17,14 +15,14 @@ public class PhysioZookeeper extends Zookeeper {
     @Override
     public void giveATreat() {
         int numberOfTreats = 0;
-        for(Animal animal: getEnclosure().getAnimals()){
-            if(numberOfTreats >= 2) break;
-            if(animal.getHealth() > 0){
-                if(animal instanceof Massageable){
-                    ((Massageable)animal).neckMassage();
+        for (Animal animal : getEnclosure().getAnimals()) {
+            if (numberOfTreats >= 2) break;
+            if (animal.getHealth() > 0) {
+                if (animal instanceof Massageable) {
+                    ((Massageable) animal).neckMassage();
                 }
-                if(animal instanceof Bathable){
-                    ((Bathable)animal).bath();
+                if (animal instanceof Bathable) {
+                    ((Bathable) animal).bath();
                 }
                 numberOfTreats++;
             }

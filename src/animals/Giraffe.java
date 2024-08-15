@@ -17,6 +17,7 @@ public class Giraffe extends Animal implements Massageable {
         super("Giraffe", age, gender);
         setLifeExpectancy(lifeExpectancy);
         setHealth(health);
+        setEats(Set.of(Food.HAY, Food.FRUIT));
     }
 
 

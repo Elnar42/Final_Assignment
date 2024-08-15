@@ -1,8 +1,9 @@
 package animals;
 
 import enums.Gender;
+import treats.Strokeable;
 
-public class Tiger extends BigCat {
+public class Tiger extends BigCat  implements Strokeable {
     public Tiger(int age, Gender gender) {
         super("Tiger", age, gender);
         setLifeExpectancy(24);

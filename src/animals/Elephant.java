@@ -18,6 +18,7 @@ public class Elephant extends Animal implements Bathable {
         super("Elephant", age, gender);
         setLifeExpectancy(lifeExpectancy);
         setHealth(health);
+        setEats(Set.of(Food.HAY, Food.FRUIT));
     }
     @Override
     public void treat() {

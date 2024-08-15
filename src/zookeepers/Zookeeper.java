@@ -25,7 +25,7 @@ public class Zookeeper {
         this.enclosure = enclosure;
     }
 
-    public void aMonthPasses(){
+    public void aMonthPasses() {
         moveFood();
         enclosure.removeWaste(20);
         giveATreat();
@@ -48,14 +48,16 @@ public class Zookeeper {
 
     public void giveATreat() {
         int numberOfTreats = 0;
-        for(Animal animal: enclosure.getAnimals()){
-            if(numberOfTreats >= 2) break;
-            if(animal.getHealth() > 0){
-                if(animal instanceof Strokeable){
-                    ((Strokeable)animal).stroke();
+        for (Animal animal : enclosure.getAnimals()) {
+            if (numberOfTreats >= 2) break;
+            if (animal.getHealth() > 0) {
+
+                if (animal instanceof Strokeable) {
+                    ((Strokeable) animal).stroke();
                 }
-                if(animal instanceof Hugable){
-                    ((Hugable)animal).hug();
+                if (animal instanceof Hugable) {
+                    ((Hugable) animal).hug();
+
                 }
                 numberOfTreats++;
             }

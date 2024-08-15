@@ -17,6 +17,7 @@ public class Bear extends Animal implements Hugable {
         super("Bear", age, gender);
         setLifeExpectancy(lifeExpectancy);
         setHealth(health);
+        setEats(Set.of(Food.FISH, Food.STEAK));
     }
 
     @Override
